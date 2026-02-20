@@ -1,0 +1,4 @@
+2026-02-18 17:34:09.089960-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "FUNCIONARIOS" no encontrada
+Table "FUNCIONARIOS" not found; SQL statement:
+SELECT * FROM funcionarios [42102-232]

@@ -1,0 +1,12 @@
+type Funcionario {
+    id: ID
+    nombre: String
+    cargo: String
+    salario: Float
+    sindicato: String
+}
+
+type Query {
+    funcionarios: [Funcionario]
+    funcionarioPorId(id: ID!): Funcionario
+}
