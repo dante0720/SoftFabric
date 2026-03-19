@@ -17,6 +17,17 @@ public class FuncionarioService {
     }
 
     public Funcionario guardar(Funcionario funcionario) {
+
+        Optional<Funcionario> existente = repository.findByDocumento(funcionario.getDocumento());
+
+        if (existente.isPresent()) {
+            throw new RuntimeException("Ya existe un funcionario con el documento: " + funcionario.getDocumento());
+        }
+
+        if (repository.findByCorreoInstitucional(funcionario.getCorreoInstitucional()).isPresent()) {
+            throw new RuntimeException("El correo institucional ya está registrado");
+        }
+
         return repository.save(funcionario);
     }
 
@@ -28,12 +39,23 @@ public class FuncionarioService {
         return repository.findById(id);
     }
 
+    public Optional<Funcionario> buscarPorDocumento(String documento) {
+        return repository.findByDocumento(documento);
+    }
+
     public Optional<Funcionario> actualizar(Long id, Funcionario datos) {
         return repository.findById(id).map(f -> {
-            f.setNombre(datos.getNombre());
-            f.setCargo(datos.getCargo());
-            f.setSalario(datos.getSalario());
-            f.setSindicato(datos.getSindicato());
+
+            f.setPrimerNombre(datos.getPrimerNombre());
+            f.setSegundoNombre(datos.getSegundoNombre());
+            f.setPrimerApellido(datos.getPrimerApellido());
+            f.setSegundoApellido(datos.getSegundoApellido());
+            f.setCorreoInstitucional(datos.getCorreoInstitucional());
+            f.setCorreoPersonal(datos.getCorreoPersonal());
+            f.setNumeroCelular(datos.getNumeroCelular());
+            f.setDocumento(datos.getDocumento());
+            f.setTipoDocumento(datos.getTipoDocumento());
+
             return repository.save(f);
         });
     }

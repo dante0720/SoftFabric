@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -14,17 +16,35 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre es obligatorio")
-    private String nombre;
+    @NotBlank
+    private String primerNombre;
 
-    @NotBlank(message = "El cargo es obligatorio")
-    private String cargo;
+    private String segundoNombre;
 
-    @NotNull(message = "El salario es obligatorio")
-    @Positive(message = "El salario debe ser mayor que cero")
-    private Double salario;
+    @NotBlank
+    private String primerApellido;
 
-    @NotBlank(message = "El sindicato es obligatorio")
-    private String sindicato;
+    private String segundoApellido;
+
+    @Email
+    @NotBlank
+    private String correoInstitucional;
+
+    @Email
+    private String correoPersonal;
+
+    @NotBlank
+    private String numeroCelular;
+
+    @NotBlank
+    @Column(unique = true)
+    private String documento;
+
+    @NotBlank
+    private String tipoDocumento;
+
+    @JsonIgnore
+    private String password;
+
+    private Boolean isFuncionarioSecretaria = false;
 }
-

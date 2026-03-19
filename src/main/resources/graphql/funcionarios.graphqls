@@ -1,12 +1,48 @@
 type Funcionario {
     id: ID
-    nombre: String
-    cargo: String
-    salario: Float
-    sindicato: String
+    primerNombre: String
+    segundoNombre: String
+    primerApellido: String
+    segundoApellido: String
+    correoInstitucional: String
+    correoPersonal: String
+    numeroCelular: String
+    documento: String
+    tipoDocumento: String
 }
 
 type Query {
     funcionarios: [Funcionario]
-    funcionarioPorId(id: ID!): Funcionario
+    funcionarioPorId(id: ID): Funcionario
+    funcionarioPorDocumento(documento: String): Funcionario
+}
+
+type Mutation {
+
+    crearFuncionario(
+        primerNombre: String
+        segundoNombre: String
+        primerApellido: String
+        segundoApellido: String
+        correoInstitucional: String
+        correoPersonal: String
+        numeroCelular: String
+        documento: String
+        tipoDocumento: String
+    ): Funcionario
+
+    actualizarFuncionario(
+        id: ID
+        primerNombre: String
+        segundoNombre: String
+        primerApellido: String
+        segundoApellido: String
+        correoInstitucional: String
+        correoPersonal: String
+        numeroCelular: String
+        documento: String
+        tipoDocumento: String
+    ): Funcionario
+
+    eliminarFuncionario(id: ID): Boolean
 }

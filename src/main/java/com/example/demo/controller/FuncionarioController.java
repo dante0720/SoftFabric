@@ -6,6 +6,7 @@ import com.example.demo.service.FuncionarioService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import com.example.demo.dto.FuncionarioDTO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -14,26 +15,37 @@ import java.util.List;
 public class FuncionarioController {
 
     private final FuncionarioService service;
+    private final PasswordEncoder passwordEncoder;
 
-    public FuncionarioController(FuncionarioService service) {
+    public FuncionarioController(FuncionarioService service, PasswordEncoder passwordEncoder) {
         this.service = service;
+        this.passwordEncoder = passwordEncoder;
     }
-
 
     @PostMapping
-    public ResponseEntity<Funcionario> crear(
-            @Valid @RequestBody FuncionarioDTO dto
-    ) {
+    public ResponseEntity<Funcionario> crear(@Valid @RequestBody FuncionarioDTO dto) {
+
         Funcionario funcionario = new Funcionario();
-        funcionario.setNombre(dto.getNombre());
-        funcionario.setCargo(dto.getCargo());
-        funcionario.setSalario(dto.getSalario());
-        funcionario.setSindicato(dto.getSindicato());
+
+        funcionario.setPrimerNombre(dto.getPrimerNombre());
+        funcionario.setSegundoNombre(dto.getSegundoNombre());
+        funcionario.setPrimerApellido(dto.getPrimerApellido());
+        funcionario.setSegundoApellido(dto.getSegundoApellido());
+        funcionario.setCorreoInstitucional(dto.getCorreoInstitucional());
+        funcionario.setCorreoPersonal(dto.getCorreoPersonal());
+        funcionario.setNumeroCelular(dto.getNumeroCelular());
+        funcionario.setDocumento(dto.getDocumento());
+        funcionario.setTipoDocumento(dto.getTipoDocumento());
+
+        // 🔐 Encriptar contraseña
+        funcionario.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        funcionario.setIsFuncionarioSecretaria(dto.getIsFuncionarioSecretaria());
 
         Funcionario guardado = service.guardar(funcionario);
+
         return ResponseEntity.status(201).body(guardado);
     }
-
 
     @GetMapping
     public List<Funcionario> listar() {
@@ -48,16 +60,31 @@ public class FuncionarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/documento/{documento}")
+    public ResponseEntity<Funcionario> obtenerPorDocumento(@PathVariable String documento) {
+
+        return service.buscarPorDocumento(documento)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Funcionario> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody FuncionarioDTO dto
     ) {
+
         Funcionario funcionario = new Funcionario();
-        funcionario.setNombre(dto.getNombre());
-        funcionario.setCargo(dto.getCargo());
-        funcionario.setSalario(dto.getSalario());
-        funcionario.setSindicato(dto.getSindicato());
+
+        funcionario.setPrimerNombre(dto.getPrimerNombre());
+        funcionario.setSegundoNombre(dto.getSegundoNombre());
+        funcionario.setPrimerApellido(dto.getPrimerApellido());
+        funcionario.setSegundoApellido(dto.getSegundoApellido());
+        funcionario.setCorreoInstitucional(dto.getCorreoInstitucional());
+        funcionario.setCorreoPersonal(dto.getCorreoPersonal());
+        funcionario.setNumeroCelular(dto.getNumeroCelular());
+        funcionario.setDocumento(dto.getDocumento());
+        funcionario.setTipoDocumento(dto.getTipoDocumento());
 
         return service.actualizar(id, funcionario)
                 .map(ResponseEntity::ok)
